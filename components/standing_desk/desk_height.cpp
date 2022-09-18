@@ -13,34 +13,31 @@ void UARTDemo::loop() {
   while (this->available()) {
     uint8_t c;
     this->read_byte(&c);
-    this->handle_char_(c);
+
+    if (c != 0x99) {
+        continue
+    }
+
+    ESP_LOGD(TAG, "Found state message");
+
+    uint8_t state;
+    this->read_byte(&state);
+
+    ESP_LOGD(TAG, "State: %d", state);
+
+    uint8_t msb;
+    uint8_t lsb;
+    this->read_byte(&lsb);
+    this->read_byte(&msb);
+
+    uint16_t value = (msb << 8) | lsb;
+
+    ESP_LOGD(TAG, "Height: %d", state);
   }
 }
 
 void UARTDemo::handle_char_(uint8_t c) {
 
-  if (this->rx_message_.size() > 100) {
-      ESP_LOGW(TAG, "Message too long, discarding");
-      this->rx_message_.clear();
-  }
-
-  this->rx_message_.push_back(c);
-
-  if (this->rx_message_.size() < 5)
-    return;
-
-  if (this->rx_message_[0] == 0x99 && 
-      this->rx_message_[2] == 0x01) {
-    ESP_LOGD(TAG, "Found height message");
-    uint8_t state = this->rx_message_[1];
-    int height = this->rx_message_[3] << 8 | this->rx_message_[4];
-
-    this->rx_message_.erase(this->rx_message_.begin(), this->rx_message_.begin() + 5);
-
-    ESP_LOGD(TAG, "State: %d, Height: %d", state, height);
-  } else {
-    this->rx_message_.erase(this->rx_message_.begin());
-  }
 }
 
 //   if (c == '\r')
