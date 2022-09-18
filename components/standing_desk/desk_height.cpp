@@ -38,8 +38,6 @@ void UARTDemo::loop() {
 
 void UARTDemo::handle_char_(uint8_t c) {
 
-}
-
 //   if (c == '\r')
 //     return;
 //   if (c == '\n') {
