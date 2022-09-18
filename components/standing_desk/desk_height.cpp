@@ -36,7 +36,7 @@ void UARTDemo::loop() {
 
     uint16_t value = (msb << 8) | lsb;
 
-    float heighIn = map(value, 5178, 22140, 22.9, 49)
+    float heighIn = map(value, 5178, 22140, 22.9, 49);
 
     ESP_LOGD(TAG, "Height: %.1f", heighIn);
 
