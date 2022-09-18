@@ -4,7 +4,7 @@ class DeskHeight : public Component, public UARTDevice, public Sensor {
  public:
   DeskHeight(UARTComponent *parent) : UARTDevice(parent) {}
 
-  char packet_header[3];
+  char packet_header[3] = {0x00, 0x00, 0x00};
 
   void setup() override {
     // nothing to do here
