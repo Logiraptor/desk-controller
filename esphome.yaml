@@ -1,0 +1,129 @@
+esphome:
+  name: smartdesk
+  includes:
+    - desk_height.h
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "13ZDhPLieXiql9M9cb1OV5AVH1o/0cu6YT36CawwtDE="
+
+ota:
+  password: "7b62f23aaed65973d6a9e569a67f19da"
+
+logger:
+  level: DEBUG
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Smartdesk Fallback Hotspot"
+    password: "Zj5Aqfxd9aTb"
+
+captive_portal:
+
+improv_serial:
+
+web_server:
+  port: 80
+
+custom_component:
+- lambda: |-
+    auto desk_height = new DeskHeight(id(uart_bus));
+    return {desk_height};
+
+uart:
+  id: standing_desk_uart
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+  debug:
+
+switch:
+  - platform: uart
+    name: "no_button"
+    id: "no_button"
+    data: [0xD8, 0xD8, 0x78, 0x00, 0x00]
+    send_every: 98ms
+
+  - platform: uart
+    name: "uart_preset1"
+    id: "uart_preset1"
+    data: [0xD8, 0xD8, 0x78, 0x04, 0x04]
+    send_every: 98ms
+  - platform: uart
+    name: "uart_preset2"
+    id: "uart_preset2"
+    data: [0xD8, 0xD8, 0x78, 0x08, 0x08]
+    send_every: 98ms
+  - platform: uart
+    name: "uart_preset3"
+    id: "uart_preset3"
+    data: [0xD8, 0xD8, 0x78, 0x10, 0x10]
+    send_every: 98ms
+  - platform: uart
+    name: "uart_preset4"
+    id: "uart_preset4"
+    data: [0xD8, 0xD8, 0x78, 0x20, 0x20]
+    send_every: 98ms
+
+button:
+  - platform: template
+    name: "Desk Preset 1"
+    icon: "mdi:numeric-1-box"
+    on_press:
+      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - delay: 98ms
+      - switch.turn_on: "uart_preset1"
+      - delay: 1s
+      - switch.turn_off: "uart_preset1"
+      - switch.turn_on: "no_button"
+      - delay: 5s
+      - switch.turn_off: "no_button"
+
+  - platform: template
+    name: "Desk Preset 2"
+    icon: "mdi:numeric-2-box"
+    on_press:
+      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - delay: 98ms
+      - switch.turn_on: "uart_preset2"
+      - delay: 1s
+      - switch.turn_off: "uart_preset2"
+      - switch.turn_on: "no_button"
+      - delay: 5s
+      - switch.turn_off: "no_button"
+
+  - platform: template
+    name: "Desk Preset 3"
+    icon: "mdi:numeric-3-box"
+    on_press:
+      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - delay: 98ms
+      - switch.turn_on: "uart_preset3"
+      - delay: 1s
+      - switch.turn_off: "uart_preset3"
+      - switch.turn_on: "no_button"
+      - delay: 5s
+      - switch.turn_off: "no_button"
+
+  - platform: template
+    name: "Desk Preset 4"
+    icon: "mdi:numeric-4-box"
+    on_press:
+      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - delay: 98ms
+      - switch.turn_on: "uart_preset4"
+      - delay: 1s
+      - switch.turn_off: "uart_preset4"
+      - switch.turn_on: "no_button"
+      - delay: 5s
+      - switch.turn_off: "no_button"
