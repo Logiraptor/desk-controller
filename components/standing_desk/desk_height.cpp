@@ -26,6 +26,23 @@ void UARTDemo::handle_char_(uint8_t c) {
 
   this->rx_message_.push_back(c);
 
+  if (this->rx_message_.size() < 5)
+    return;
+
+  if (this->rx_message_[0] == 0x99 && 
+      this->rx_message_[2] == 0x01) {
+    ESP_LOGD(TAG, "Found height message");
+    uint8_t state = this->rx_message_[1];
+    int height = this->rx_message_[3] << 8 | this->rx_message_[4];
+
+    this->rx_message_.erase(this->rx_message_.begin(), this->rx_message_.begin() + 5);
+
+    ESP_LOGD(TAG, "State: %d, Height: %d", state, height);
+  } else {
+    this->rx_message_.erase(this->rx_message_.begin());
+  }
+}
+
 //   if (c == '\r')
 //     return;
 //   if (c == '\n') {
