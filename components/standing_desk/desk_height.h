@@ -1,58 +1,76 @@
-#include "esphome.h"
+#pragma once
+
+#include "esphome/core/component.h"
+#include "esphome/components/binary_sensor/binary_sensor.h"
+#include "esphome/components/button/button.h"
+#include "esphome/components/output/binary_output.h"
+#include "esphome/components/output/float_output.h"
+#include "esphome/components/sensor/sensor.h"
+#include "esphome/components/switch/switch.h"
+#include "esphome/components/text_sensor/text_sensor.h"
+#include "esphome/components/uart/uart.h"
 
 namespace esphome {
-namespace timotion {
+namespace uart_demo {
 
-class DeskHeight : public Component, public UARTDevice, public Sensor {
+class UARTDemo : public Component,  public uart::UARTDevice {
  public:
-  DeskHeight(UARTComponent *parent) : UARTDevice(parent) {}
+  float get_setup_priority() const override { return setup_priority::LATE; }
+  void setup() override;
+  void loop() override;
+  void dump_config() override;
 
-  char packet_header[3] = {0x00, 0x00, 0x00};
+  void set_the_text(text_sensor::TextSensor *text_sensor) { the_text_ = text_sensor; }
+  void set_the_sensor(sensor::Sensor *sensor) { the_sensor_ = sensor; }
+  void set_the_binsensor(binary_sensor::BinarySensor *sensor) { the_binsensor_ = sensor; }
 
-  void setup() override {
-    // nothing to do here
-  }
+  void write_binary(bool value);
+  void write_float(float value);
+  void ping();
+ protected:
+  text_sensor::TextSensor *the_text_{nullptr};
+  sensor::Sensor *the_sensor_{nullptr};
+  binary_sensor::BinarySensor *the_binsensor_{nullptr};
 
-  void loop() override {
-
-    // Read data from the desk:
-    // 0x99 0x40 0x01 a b is a height value
-    // Anything else (16 bytes) is a status message
-
-    // Read 3 bytes
-    packet_header[0] = packet_header[1];
-    packet_header[1] = packet_header[2];
-    packet_header[2] = read();
-
-    // Check if it's a height packet
-    if (packet_header[0] == 0x99 && 
-        packet_header[1] == 0x40 && 
-        packet_header[2] == 0x01) {
-
-        packet_header[0] = 0;
-        packet_header[1] = 0;
-        packet_header[2] = 0;
-
-        // Read 2 bytes
-        char packet_height[2];
-        packet_height[0] = read();
-        packet_height[1] = read();
-
-        // Convert to int with little endian encoding
-        int height = (packet_height[1] << 8) | packet_height[0];
-
-        // Publish height
-        publish_state(height);
-        ESP_LOGD("desk_height", "Received height packet");
-    } else {
-        // Not a height packet, read the rest of the packet
-        for (int i = 0; i < 13; i++) {
-          read();
-        }
-        ESP_LOGD("desk_height", "Received status packet");
-    }
-  }
+  void handle_char_(uint8_t c);
+  std::vector<uint8_t> rx_message_;
 };
 
-} // namespace timotion
-} // namespace esphome
+class UARTDemoBOutput : public Component, public output::BinaryOutput {
+ public:
+  void dump_config() override;
+  void set_parent(UARTDemo *parent) { this->parent_ = parent; }
+ protected:
+  void write_state(bool state) override;
+  UARTDemo *parent_;
+};
+
+class UARTDemoFOutput : public Component, public output::FloatOutput {
+ public:
+  void dump_config() override;
+  void set_parent(UARTDemo *parent) { this->parent_ = parent; }
+ protected:
+  void write_state(float state) override;
+  UARTDemo *parent_;
+};
+
+class UARTDemoSwitch : public Component, public switch_::Switch {
+ public:
+  void dump_config() override;
+  void set_parent(UARTDemo *parent) { this->parent_ = parent; }
+ protected:
+  void write_state(bool state) override;
+  UARTDemo *parent_;
+};
+
+class UARTDemoButton : public Component, public button::Button {
+ public:
+  void dump_config() override;
+  void set_parent(UARTDemo *parent) { this->parent_ = parent; }
+ protected:
+  void press_action() override;
+  UARTDemo *parent_;
+};
+
+}  // namespace uart_demo
+}  // namespace esphome
