@@ -32,7 +32,7 @@ void UARTDemo::loop() {
 
     uint16_t value = (msb << 8) | lsb;
 
-    ESP_LOGD(TAG, "Height: %d", state);
+    ESP_LOGD(TAG, "Height: %d", value);
   }
 }
 
