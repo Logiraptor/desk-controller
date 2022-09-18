@@ -19,7 +19,7 @@ void UARTDemo::loop() {
 
 void UARTDemo::handle_char_(uint8_t c) {
 
-  if (this->rx_message_.length() > 100) {
+  if (this->rx_message_.size() > 100) {
       ESP_LOGW(TAG, "Message too long, discarding");
       this->rx_message_.clear();
   }
