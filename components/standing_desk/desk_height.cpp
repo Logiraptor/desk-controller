@@ -18,12 +18,11 @@ void UARTDemo::loop() {
         continue;
     }
 
-    ESP_LOGD(TAG, "Found state message");
-
+    // 0x40 == not moving
+    // 0x41 == moving down
+    // 0x42 == moving up
     uint8_t state;
     this->read_byte(&state);
-
-    ESP_LOGD(TAG, "State: %d", state);
 
     uint8_t msb;
     uint8_t lsb;
@@ -32,8 +31,16 @@ void UARTDemo::loop() {
 
     uint16_t value = (msb << 8) | lsb;
 
-    ESP_LOGD(TAG, "Height: %d", value);
+    float heighIn = map(value, 5178, 22140, 22.9, 49)
+
+    ESP_LOGD(TAG, "Height: %.1f", heighIn);
+
   }
+}
+
+float map(float s, float a1, float a2, float b1, float b2)
+{
+    return b1 + (s-a1)*(b2-b1)/(a2-a1);
 }
 
 void UARTDemo::handle_char_(uint8_t c) {
