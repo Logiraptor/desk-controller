@@ -15,7 +15,7 @@ void UARTDemo::loop() {
     this->read_byte(&c);
 
     if (c != 0x99) {
-        continue
+        continue;
     }
 
     ESP_LOGD(TAG, "Found state message");
