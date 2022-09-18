@@ -8,7 +8,9 @@ from esphome.const import CONF_ID, CONF_HEIGHT, CONF_TIMEOUT, ICON_GAUGE
 DEPENDENCIES = ['uart']
 AUTO_LOAD = ['sensor']
 
-DeskHeight = cg.class_('DeskHeight', cg.Component, uart.UARTDevice)
+timotion = cg.esphome_ns.namespace('timotion')
+
+DeskHeight = timotion.class_('DeskHeight', cg.Component, uart.UARTDevice)
 
 CONFIG_SCHEMA = cv.COMPONENT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(DeskHeight),

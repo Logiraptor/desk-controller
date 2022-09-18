@@ -1,5 +1,8 @@
 #include "esphome.h"
 
+namespace esphome {
+namespace timotion {
+
 class DeskHeight : public Component, public UARTDevice, public Sensor {
  public:
   DeskHeight(UARTComponent *parent) : UARTDevice(parent) {}
@@ -50,3 +53,6 @@ class DeskHeight : public Component, public UARTDevice, public Sensor {
     }
   }
 };
+
+} // namespace timotion
+} // namespace esphome

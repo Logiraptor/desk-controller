@@ -1,7 +1,5 @@
 esphome:
   name: smartdesk
-  includes:
-    - desk_height.h
 
 esp32:
   board: esp32dev
@@ -35,10 +33,12 @@ improv_serial:
 web_server:
   port: 80
 
-custom_component:
-- lambda: |-
-    auto desk_height = new DeskHeight(id(uart_bus));
-    return {desk_height};
+external_components:
+- source: github://logiraptor/desk-controller
+  refresh: 1min
+
+standing_desk:
+  id: desk
 
 uart:
   id: standing_desk_uart
