@@ -31,8 +31,8 @@ void UARTDemo::loop() {
 
     uint8_t msb;
     uint8_t lsb;
-    this->read_byte(&lsb);
     this->read_byte(&msb);
+    this->read_byte(&lsb);
 
     uint16_t value = (msb << 8) | lsb;
 
