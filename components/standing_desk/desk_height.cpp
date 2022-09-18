@@ -8,7 +8,7 @@ static const char *TAG = "uart_demo";
 
 float map(float s, float a1, float a2, float b1, float b2)
 {
-    return b1 + (s-a1)*(b2-b1)/(a2-a1);
+    return b1 + (s-a1)*((b2-b1)/(a2-a1));
 }
 
 void UARTDemo::setup() {
@@ -38,7 +38,7 @@ void UARTDemo::loop() {
 
     float heighIn = map(value, 5178, 22140, 22.9, 49);
 
-    ESP_LOGD(TAG, "Height: %.1f", heighIn);
+    ESP_LOGD(TAG, "Value: %d, Height: %.1f", value, heighIn);
 
   }
 }
