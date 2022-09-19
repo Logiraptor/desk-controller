@@ -34,5 +34,5 @@ async def to_code(config):
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
 
-    sens = await sensor.new_sensor(id: "desk_height")
+    sens = await sensor.new_sensor(config[CONF_DESK_HEIGHT])
     cg.add(var.set_the_sensor(sens))
