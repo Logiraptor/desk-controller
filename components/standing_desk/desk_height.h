@@ -12,7 +12,6 @@ class UARTDemo : public Component,  public uart::UARTDevice {
   float get_setup_priority() const override { return setup_priority::LATE; }
   void setup() override;
   void loop() override;
-  void dump_config() override;
 
   void set_the_sensor(sensor::Sensor *sensor) { the_sensor_ = sensor; }
 
