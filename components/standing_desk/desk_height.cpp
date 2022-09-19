@@ -45,8 +45,7 @@ void UARTDemo::loop() {
 
     float heighIn = map(value, 5178, 22140, 22.9, 49);
 
-    ESP_LOGD(TAG, "Value: %d, Height: %.1f", value, heighIn);
-
+    this->the_sensor_->publish_state(heightIn);
   }
 }
 
