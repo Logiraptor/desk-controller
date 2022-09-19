@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import automation
-from esphome.components import uart, binary_sensor, button, output, sensor, switch, text_sensor
+from esphome.components import uart, sensor
 from esphome.const import CONF_ID, CONF_STATE, DEVICE_CLASS_VOLTAGE, ICON_RULER, UNIT_METER
 
 MULTI_CONF = True
