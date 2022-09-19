@@ -6,15 +6,11 @@ from esphome.const import CONF_ID, CONF_STATE, DEVICE_CLASS_VOLTAGE, ICON_RULER,
 
 MULTI_CONF = True
 DEPENDENCIES = ['uart']
-AUTO_LOAD = ['binary_sensor', 'button', 'output', 'sensor', 'switch', 'text_sensor']
+AUTO_LOAD = ['sensor']
 
 uart_demo_ns = cg.esphome_ns.namespace('uart_demo')
 
 UARTDemo = uart_demo_ns.class_('UARTDemo', cg.Component, uart.UARTDevice)
-UARTDemoBOutput = uart_demo_ns.class_("UARTDemoBOutput", output.BinaryOutput)
-UARTDemoFOutput = uart_demo_ns.class_("UARTDemoFOutput", output.FloatOutput)
-UARTDemoSwitch = uart_demo_ns.class_("UARTDemoSwitch", switch.Switch, cg.Component)
-UARTDemoButton = uart_demo_ns.class_("UARTDemoButton", button.Button, cg.Component)
 
 CONF_DESK_HEIGHT = "desk_height"
 
