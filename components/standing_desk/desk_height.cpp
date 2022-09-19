@@ -29,10 +29,17 @@ void UARTDemo::loop() {
     uint8_t state;
     this->read_byte(&state);
 
+    uint8_t check;
+    this->read_byte(&check);
+
+    if (check != 0x01) {
+        continue;
+    }
+
     uint8_t msb;
     uint8_t lsb;
-    this->read_byte(&msb);
     this->read_byte(&lsb);
+    this->read_byte(&msb);
 
     uint16_t value = (msb << 8) | lsb;
 
