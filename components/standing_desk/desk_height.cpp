@@ -33,7 +33,7 @@ void UARTDemo::loop() {
     this->read_byte(&checksum);
 
     if (checksum != ((c + state + check + heightCm) & 0xFF)) {
-        ESP_LOGW(TAG, "Checksum failed");
+        ESP_LOGW(TAG, "Checksum failed: %02X %02X %02X %02X %02X", c, state, check, heightCm, checksum);
         continue;
     }
 
