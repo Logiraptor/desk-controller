@@ -6,6 +6,14 @@ namespace uart_demo {
 
 static const char *TAG = "uart_demo";
 
+float UARTDemo::get_desk_height() {
+  return this->desk_height_;
+}
+
+float UARTDemo::get_desk_target_height() {
+  return this->desk_target_height_;
+}
+
 void UARTDemo::read_actual_height() {
   uint8_t c;
   this->read_byte(&c);
@@ -34,7 +42,7 @@ void UARTDemo::read_actual_height() {
   }
 
   float heightIn = float(heightCm) / 2.54;
-  this->height_sensor_->publish_state(heightIn);
+  this->desk_height_ = heightIn;
 }
 
 void UARTDemo::read_target_height() {
@@ -63,7 +71,12 @@ void UARTDemo::read_target_height() {
   }
 
   float heightIn = float(height) / 2.54;
-  this->target_height_sensor_->publish_state(heightIn);
+  this->desk_target_height_ = heightIn;
+}
+
+bool UARTDemo::is_awake() {
+  uint64_t now = millis();
+  return (now - this->last_byte_) < 1000;
 }
 
 void UARTDemo::send_button_state() {
@@ -85,6 +98,8 @@ void UARTDemo::loop() {
     uint8_t c;
     this->peek_byte(&c);
 
+    this->last_byte_ = millis();
+
     if (c == 0x99) {
       this->read_actual_height();
     } else if (c == 0x98) {
@@ -93,6 +108,12 @@ void UARTDemo::loop() {
     } else {
       this->read_byte(&c);
     }
+  }
+
+  if (!this->is_awake() && this->button_state_ != 0x00) {
+    this->send_button_state();
+    // Avoid sending again for at least 1 second
+    this->last_byte_ = millis();
   }
 }
 

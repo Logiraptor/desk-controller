@@ -13,13 +13,17 @@ class UARTDemo : public Component,  public uart::UARTDevice {
   void setup() override;
   void loop() override;
 
-  void set_height_sensor(sensor::Sensor *sensor) { height_sensor_ = sensor; }
-  void set_target_height_sensor(sensor::Sensor *sensor) { target_height_sensor_ = sensor; }
   void set_button_state(uint8_t state) { button_state_ = state; }
 
+  float get_desk_height();
+  float get_desk_target_height();
+
+  bool is_awake();
+
  protected:
-  sensor::Sensor *height_sensor_{nullptr};
-  sensor::Sensor *target_height_sensor_{nullptr};
+  float desk_height_{0.0f};
+  float desk_target_height_{0.0f};
+  uint64_t last_byte_{0};
   uint8_t button_state_{0};
 
   void read_actual_height();

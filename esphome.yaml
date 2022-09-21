@@ -40,10 +40,6 @@ external_components:
 standing_desk:
   id: desk
   uart_id: standing_desk_uart
-  desk_height:
-    id: desk_height
-  desk_target_height:
-    id: desk_target_height
 
 uart:
   id: standing_desk_uart
@@ -51,97 +47,65 @@ uart:
   rx_pin: GPIO16
   baud_rate: 9600
 
+binary_sensor:
+  - platform: template
+    name: "Desk Awake"
+    lambda: return id(desk).is_awake();
+    update_interval: 1s
+
 # Example configuration entry
 sensor:
   - platform: template
     name: "Desk Height"
-    lambda: |-
-      return id(desk_height).state;
-    update_interval: 10s
+    lambda: return id(desk).get_desk_height();
+    update_interval: 1s
 
   - platform: template
     name: "Desk Target Height"
-    lambda: |-
-      return id(desk_target_height).state;
-    update_interval: 10s
-
-switch:
-  - platform: uart
-    name: "no_button"
-    id: "no_button"
-    data: [0xD8, 0xD8, 0x78, 0x00, 0x00]
-    send_every: 98ms
-
-  - platform: uart
-    name: "uart_preset1"
-    id: "uart_preset1"
-    data: [0xD8, 0xD8, 0x78, 0x04, 0x04]
-    send_every: 98ms
-  - platform: uart
-    name: "uart_preset2"
-    id: "uart_preset2"
-    data: [0xD8, 0xD8, 0x78, 0x08, 0x08]
-    send_every: 98ms
-  - platform: uart
-    name: "uart_preset3"
-    id: "uart_preset3"
-    data: [0xD8, 0xD8, 0x78, 0x10, 0x10]
-    send_every: 98ms
-  - platform: uart
-    name: "uart_preset4"
-    id: "uart_preset4"
-    data: [0xD8, 0xD8, 0x78, 0x20, 0x20]
-    send_every: 98ms
+    lambda: return id(desk).get_desk_target_height();
+    update_interval: 1s
 
 button:
   - platform: template
     name: "Desk Preset 1"
     icon: "mdi:numeric-1-box"
     on_press:
-      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - lambda: return id(desk).set_button_state(0x80);
       - delay: 98ms
-      - switch.turn_on: "uart_preset1"
+      - lambda: return id(desk).set_button_state(0x04);
       - delay: 1s
-      - switch.turn_off: "uart_preset1"
-      - switch.turn_on: "no_button"
+      - lambda: return id(desk).set_button_state(0x00);
       - delay: 5s
-      - switch.turn_off: "no_button"
 
   - platform: template
     name: "Desk Preset 2"
     icon: "mdi:numeric-2-box"
     on_press:
-      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - lambda: return id(desk).set_button_state(0x80);
       - delay: 98ms
-      - switch.turn_on: "uart_preset2"
+      - lambda: return id(desk).set_button_state(0x08);
       - delay: 1s
-      - switch.turn_off: "uart_preset2"
-      - switch.turn_on: "no_button"
+      - lambda: return id(desk).set_button_state(0x00);
       - delay: 5s
-      - switch.turn_off: "no_button"
 
   - platform: template
     name: "Desk Preset 3"
     icon: "mdi:numeric-3-box"
     on_press:
-      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - lambda: return id(desk).set_button_state(0x80);
       - delay: 98ms
-      - switch.turn_on: "uart_preset3"
+      - lambda: return id(desk).set_button_state(0x10);
       - delay: 1s
-      - switch.turn_off: "uart_preset3"
-      - switch.turn_on: "no_button"
+      - lambda: return id(desk).set_button_state(0x00);
       - delay: 5s
-      - switch.turn_off: "no_button"
 
   - platform: template
     name: "Desk Preset 4"
     icon: "mdi:numeric-4-box"
     on_press:
-      - uart.write: [0xD8, 0xD8, 0x78, 0x80, 0x80]
+      - lambda: return id(desk).set_button_state(0x80);
       - delay: 98ms
-      - switch.turn_on: "uart_preset4"
+      - lambda: return id(desk).set_button_state(0x20);
       - delay: 1s
-      - switch.turn_off: "uart_preset4"
-      - switch.turn_on: "no_button"
+      - lambda: return id(desk).set_button_state(0x00);
       - delay: 5s
-      - switch.turn_off: "no_button"
