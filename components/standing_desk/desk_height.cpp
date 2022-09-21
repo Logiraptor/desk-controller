@@ -66,6 +66,17 @@ void UARTDemo::read_target_height() {
   this->target_height_sensor_->publish_state(heightIn);
 }
 
+void UARTDemo::send_button_state() {
+  ESP_LOGW(TAG, "Sending button state: %02X", this->button_state_);
+  uint8_t buffer[5];
+  buffer[0] = 0xD8;
+  buffer[1] = 0xD8;
+  buffer[2] = 0x78;
+  buffer[2] = this->button_state_;
+  buffer[3] = this->button_state_;
+  this->write_array(buffer, 5);
+}
+
 void UARTDemo::setup() {
 }
 
@@ -78,7 +89,7 @@ void UARTDemo::loop() {
       this->read_actual_height();
     } else if (c == 0x98) {
       this->read_target_height();
-      // TODO: write state here
+      this->send_button_state();
     } else {
       this->read_byte(&c);
     }
