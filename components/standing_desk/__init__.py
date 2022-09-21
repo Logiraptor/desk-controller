@@ -23,6 +23,12 @@ CONFIG_SCHEMA = cv.Schema({
         accuracy_decimals=1,
         # device_class=DEVICE_CLASS_VOLTAGE
     ),
+    cv.Optional(CONF_DESK_TARGET_HEIGHT): sensor.sensor_schema(
+        unit_of_measurement="in",
+        icon=ICON_RULER,
+        accuracy_decimals=1,
+        # device_class=DEVICE_CLASS_VOLTAGE
+    ),
 }).extend(uart.UART_DEVICE_SCHEMA)
 
 
