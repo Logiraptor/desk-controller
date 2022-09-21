@@ -17,6 +17,9 @@ class UARTDemo : public Component,  public uart::UARTDevice {
 
  protected:
   sensor::Sensor *the_sensor_{nullptr};
+
+  void read_actual_height();
+  void read_target_height();
 };
 
 }  // namespace uart_demo
