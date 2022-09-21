@@ -6,11 +6,6 @@ namespace uart_demo {
 
 static const char *TAG = "uart_demo";
 
-float map(float s, float a1, float a2, float b1, float b2)
-{
-    return b1 + (s-a1)*((b2-b1)/(a2-a1));
-}
-
 void UARTDemo::setup() {
 }
 
@@ -32,18 +27,17 @@ void UARTDemo::loop() {
     uint8_t check;
     this->read_byte(&check);
 
-    if (check != 0x01) {
+    uint8_t heightCm;
+    uint8_t checksum;
+    this->read_byte(&checksum);
+    this->read_byte(&heightCm);
+
+    if (checksum != (c + state + check + heightCm) & 0xFF) {
+        ESP_LOGW(TAG, "Checksum failed");
         continue;
     }
 
-    uint8_t msb;
-    uint8_t lsb;
-    this->read_byte(&lsb);
-    this->read_byte(&msb);
-
-    uint16_t value = (msb << 8) | lsb;
-
-    float heightIn = map(value, 5178, 22140, 22.9, 49);
+    float heightIn = float(heightCm) / 2.54;
 
     this->the_sensor_->publish_state(heightIn);
   }
