@@ -110,7 +110,11 @@ void UARTDemo::loop() {
     }
   }
 
-  if (!this->is_awake() && this->button_state_ != 0x00) {
+  bool button_pressed = this->button_state_ != 0x00;
+  bool uninitialized = this->desk_target_height_ == 0.0f;
+  bool should_awake = button_pressed || uninitialized;
+
+  if (!this->is_awake() && should_awake) {
     this->send_button_state();
     // Avoid sending again for at least 1 second
     this->last_byte_ = millis();
