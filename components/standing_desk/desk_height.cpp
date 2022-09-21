@@ -72,8 +72,8 @@ void UARTDemo::send_button_state() {
   buffer[0] = 0xD8;
   buffer[1] = 0xD8;
   buffer[2] = 0x78;
-  buffer[2] = this->button_state_;
   buffer[3] = this->button_state_;
+  buffer[4] = this->button_state_;
   this->write_array(buffer, 5);
 }
 
