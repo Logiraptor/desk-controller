@@ -52,6 +52,11 @@ binary_sensor:
     name: "Desk Awake"
     lambda: return id(desk).is_awake();
 
+  - platform: template
+    name: "Desk Standing"
+    lambda: return id(desk).get_desk_height() > 30;
+
+
 # Example configuration entry
 sensor:
   - platform: template
@@ -64,11 +69,6 @@ sensor:
     lambda: return id(desk).get_desk_target_height();
     update_interval: 1s
   
-  - platform: template
-    name: "Desk Standing"
-    lambda: return id(desk).get_desk_height() > 30;
-    update_interval: 1s
-
 button:
   - platform: template
     name: "Desk Preset 1"
