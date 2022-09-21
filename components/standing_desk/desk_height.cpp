@@ -80,7 +80,6 @@ bool UARTDemo::is_awake() {
 }
 
 void UARTDemo::send_button_state() {
-  ESP_LOGW(TAG, "Sending button state: %02X", this->button_state_);
   uint8_t buffer[5];
   buffer[0] = 0xD8;
   buffer[1] = 0xD8;
@@ -115,6 +114,7 @@ void UARTDemo::loop() {
   bool should_awake = button_pressed || uninitialized;
 
   if (!this->is_awake() && should_awake) {
+    ESP_LOGW(TAG, "Waking up desk");
     this->send_button_state();
     // Avoid sending again for at least 1 second
     this->last_byte_ = millis();
