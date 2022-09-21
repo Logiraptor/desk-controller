@@ -13,6 +13,7 @@ uart_demo_ns = cg.esphome_ns.namespace('uart_demo')
 UARTDemo = uart_demo_ns.class_('UARTDemo', cg.Component, uart.UARTDevice)
 
 CONF_DESK_HEIGHT = "desk_height"
+CONF_DESK_TARGET_HEIGHT = "desk_target_height"
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(UARTDemo),
@@ -30,5 +31,8 @@ async def to_code(config):
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
 
-    sens = await sensor.new_sensor(config[CONF_DESK_HEIGHT])
-    cg.add(var.set_the_sensor(sens))
+    height_sens = await sensor.new_sensor(config[CONF_DESK_HEIGHT])
+    cg.add(var.set_height_sensor(height_sens))
+
+    target_sens = await sensor.new_sensor(config[CONF_DESK_TARGET_HEIGHT])
+    cg.add(var.set_target_height_sensor(target_sens))

@@ -34,7 +34,7 @@ void UARTDemo::read_actual_height() {
   }
 
   float heightIn = float(heightCm) / 2.54;
-  this->the_sensor_->publish_state(heightIn);
+  this->height_sensor_->publish_state(heightIn);
 }
 
 void UARTDemo::read_target_height() {
@@ -63,7 +63,7 @@ void UARTDemo::read_target_height() {
   }
 
   float heightIn = float(height) / 2.54;
-  ESP_LOGW(TAG, "Target height: %f", heightIn);
+  this->target_height_sensor_->publish_state(heightIn);
 }
 
 void UARTDemo::setup() {
